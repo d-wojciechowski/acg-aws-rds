@@ -1,0 +1,4 @@
+aws cloudformation deploy --profile acg --template-file .\rds.yml --stack-name acg-rds --parameter-overrides file://params.json
+
+aws cloudformation delete-stack --profile acg --stack-name acg-rds
+

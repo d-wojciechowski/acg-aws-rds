@@ -152,7 +152,7 @@ Resources:
         - Key: Name
           Value: !Sub ${EnvironmentName}
       VPCSecurityGroups: 
-        - !Ref NoIngressSecurityGroup
+        - !Ref RdsSecurityGroup
 
   NatGateway1EIP:
     Type: AWS::EC2::EIP
@@ -249,12 +249,19 @@ Resources:
       RouteTableId: !Ref PrivateRouteTable2
       SubnetId: !Ref PrivateSubnet2
 
-  NoIngressSecurityGroup:
+  RdsSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupName: "no-ingress-sg"
-      GroupDescription: "Security group with no ingress rule"
+      GroupName: "rds-sg"
+      GroupDescription: "Security group for Postgresql"
       VpcId: !Ref VPC
+      SecurityGroupIngress: 
+        -   
+          CidrIp: 0.0.0.0/0
+          Description: "All incomming traffic from net to db"
+          IpProtocol: tcp
+          ToPort: 5432
+          FromPort: 5432
 
 Outputs:
   VPC:
@@ -285,6 +292,6 @@ Outputs:
     Description: A reference to the private subnet in the 2nd Availability Zone
     Value: !Ref PrivateSubnet2
 
-  NoIngressSecurityGroup:
+  RdsSecurityGroup:
     Description: Security group with no ingress rule
-    Value: !Ref NoIngressSecurityGroup
+    Value: !Ref RdsSecurityGroup
